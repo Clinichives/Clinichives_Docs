@@ -1,0 +1,631 @@
+Product: Clinora
+Module: Doctor Management & Scheduling
+Document Type: Product Requirements Document (PRD)
+Version: 1.0
+Status: Draft
+
+1. Purpose
+
+The Doctor Management & Scheduling module enables clinics to onboard doctors, configure consultation schedules, manage availability, assign specialties, define consultation fees, and control appointment slots.
+
+This module serves as the scheduling engine for Clinora and directly supports appointment booking, consultations, prescriptions, laboratory requests, billing, and analytics.
+
+2. Business Objective
+
+Provide clinics with a centralized system to:
+
+Manage doctor profiles
+Configure consultation schedules
+Generate appointment slots
+Prevent double booking
+Handle doctor leave and holidays
+Improve patient scheduling
+Maximize doctor utilization
+3. Scope
+Included in MVP
+Doctor profile management
+Specialization management
+Department assignment
+Working hours
+Break timings
+Weekly schedules
+Consultation fee
+Slot duration
+Doctor leave
+Holidays
+Availability calendar
+Appointment capacity
+Doctor search
+Doctor dashboard
+Doctor status
+Future Scope
+Telemedicine schedule
+Multiple clinic assignments
+Dynamic pricing
+AI schedule optimization
+Video consultation
+Calendar sync (Google/Outlook)
+Doctor mobile app
+Shift rotation
+Nurse assignment
+4. Actors
+Actor	Responsibilities
+Clinic Admin	Creates and manages doctors
+Reception	Views schedules and books appointments
+Doctor	Views and updates availability
+Patient	Searches available doctors
+System	Generates appointment slots and validates availability
+5. User Stories
+US-DOC-001
+
+As a Clinic Admin,
+
+I want to create a doctor profile,
+
+so that the doctor can consult patients.
+
+US-DOC-002
+
+As a Clinic Admin,
+
+I want to configure the doctor's weekly schedule,
+
+so appointments can be booked automatically.
+
+US-DOC-003
+
+As a Doctor,
+
+I want to request leave,
+
+so patients cannot book appointments during my absence.
+
+US-DOC-004
+
+As a Patient,
+
+I want to see available doctors,
+
+so I can choose the most suitable one.
+
+US-DOC-005
+
+As a Receptionist,
+
+I want to see today's doctor schedules,
+
+so I can efficiently manage bookings.
+
+6. End-to-End Workflow
+Doctor Onboarding
+Clinic Admin
+
+↓
+
+Create Doctor
+
+↓
+
+Assign Department
+
+↓
+
+Assign Specialization
+
+↓
+
+Set Consultation Fee
+
+↓
+
+Configure Weekly Schedule
+
+↓
+
+Configure Slot Duration
+
+↓
+
+Save
+
+↓
+
+Doctor Active
+Appointment Availability
+Patient
+
+↓
+
+Choose Doctor
+
+↓
+
+Backend Reads Schedule
+
+↓
+
+Remove Holidays
+
+↓
+
+Remove Leave
+
+↓
+
+Remove Existing Bookings
+
+↓
+
+Generate Available Slots
+
+↓
+
+Display Slots
+Doctor Leave
+Doctor
+
+↓
+
+Apply Leave
+
+↓
+
+Clinic Admin Approval (Optional)
+
+↓
+
+Mark Calendar Unavailable
+
+↓
+
+Notify Reception
+
+↓
+
+Patients Cannot Book
+7. Functional Requirements
+FR-DOC-001 Doctor Profile
+
+Each doctor profile shall contain:
+
+Employee ID
+Name
+Photo
+Qualification
+Registration Number
+Specialization
+Department
+Experience
+Biography
+Consultation Fee
+Languages Spoken
+Status
+FR-DOC-002 Weekly Schedule
+
+Configure:
+
+Monday
+
+09:00 AM - 01:00 PM
+
+02:00 PM - 06:00 PM
+
+Repeat for all weekdays.
+
+FR-DOC-003 Slot Duration
+
+Supported:
+
+10 Minutes
+
+15 Minutes
+
+20 Minutes
+
+30 Minutes
+
+45 Minutes
+
+60 Minutes
+FR-DOC-004 Consultation Types
+
+Support:
+
+Physical Visit
+Video Consultation (Future)
+Home Visit (Future)
+FR-DOC-005 Availability
+
+Doctor status:
+
+Available
+
+Busy
+
+On Leave
+
+Holiday
+
+Inactive
+FR-DOC-006 Break Time
+
+Support:
+
+Lunch Break
+
+Tea Break
+
+Custom Break
+
+Example:
+
+09:00 - 01:00
+
+Break
+
+01:00 - 02:00
+
+02:00 - 06:00
+FR-DOC-007 Leave
+
+Support:
+
+Casual Leave
+Sick Leave
+Vacation
+Emergency Leave
+
+During leave:
+
+No new appointments
+Existing appointments flagged
+Reception notified
+FR-DOC-008 Holidays
+
+Clinic holidays automatically block doctor schedules.
+
+FR-DOC-009 Doctor Search
+
+Search by:
+
+Name
+Department
+Specialization
+Language
+Availability
+FR-DOC-010 Doctor Dashboard
+
+Display:
+
+Today's appointments
+Current patient
+Upcoming appointments
+Pending lab reports
+Follow-ups
+Revenue summary (optional)
+Patient queue
+8. Business Rules
+Every doctor belongs to one clinic in MVP.
+Every doctor has one schedule.
+Appointments cannot overlap.
+Slot duration is configurable.
+Leave overrides working schedule.
+Holidays override schedules.
+Inactive doctors cannot receive bookings.
+Consultation fees may vary by doctor.
+9. UI Requirements
+Doctor List
+
+Columns:
+
+Photo
+Name
+Department
+Specialization
+Fee
+Today's Availability
+Status
+Actions
+Doctor Profile
+
+Tabs:
+
+Overview
+
+Schedule
+
+Leave
+
+Appointments
+
+Patients
+
+Settings
+Schedule Screen
+
+Calendar view
+
+Weekly schedule
+
+Slot duration
+
+Breaks
+
+Holiday overrides
+
+Leave Screen
+
+Apply leave
+
+View leave history
+
+Cancel leave
+
+Doctor Dashboard
+
+Widgets:
+
+Today's appointments
+
+Current queue
+
+Upcoming consultations
+
+Pending reports
+
+Notifications
+
+10. Backend APIs
+POST /api/v1/doctors
+
+GET /api/v1/doctors
+
+GET /api/v1/doctors/{id}
+
+PATCH /api/v1/doctors/{id}
+
+DELETE /api/v1/doctors/{id}
+
+Schedule
+
+POST /api/v1/doctors/{id}/schedule
+
+GET /api/v1/doctors/{id}/schedule
+
+PATCH /api/v1/doctors/{id}/schedule
+
+Availability
+
+GET /api/v1/doctors/{id}/available-slots
+
+GET /api/v1/doctors/{id}/availability
+
+Leave
+
+POST /api/v1/doctors/{id}/leave
+
+GET /api/v1/doctors/{id}/leave
+
+DELETE /api/v1/doctors/{id}/leave
+11. Database Tables
+doctors
+
+doctor_specializations
+
+doctor_departments
+
+doctor_schedule
+
+doctor_breaks
+
+doctor_leave
+
+doctor_holidays
+
+doctor_availability
+
+doctor_languages
+
+doctor_settings
+doctors
+
+Fields
+
+id
+
+clinic_id
+
+employee_code
+
+first_name
+
+last_name
+
+registration_number
+
+qualification
+
+specialization
+
+department
+
+experience
+
+consultation_fee
+
+status
+
+created_at
+
+updated_at
+doctor_schedule
+doctor_id
+
+day_of_week
+
+start_time
+
+end_time
+
+slot_duration
+
+is_active
+doctor_breaks
+doctor_id
+
+start_time
+
+end_time
+
+reason
+doctor_leave
+doctor_id
+
+start_date
+
+end_date
+
+leave_type
+
+reason
+
+status
+12. Validation Rules
+
+Doctor Name
+
+Required
+
+Maximum 100 characters
+
+Consultation Fee
+
+Must be positive
+
+Schedule
+
+Cannot overlap
+
+Break
+
+Must fall within working hours
+
+Leave
+
+Cannot overlap existing leave
+
+13. Security
+
+Only Clinic Admin can:
+
+Create doctors
+Delete doctors
+Configure schedules
+
+Doctors can:
+
+View profile
+Update limited personal information
+Apply leave
+
+Patients
+
+Read-only access to public doctor information required for booking.
+
+14. Notifications
+
+Notify:
+
+Reception
+
+Doctor leave
+Schedule changes
+
+Patients
+
+Doctor unavailable
+Appointment affected
+
+Doctor
+
+New appointments
+Cancellations
+Daily schedule reminder
+15. Frontend Tasks
+Doctor Management
+Doctor list page
+Create doctor form
+Edit doctor page
+Doctor profile page
+Scheduling
+Weekly calendar
+Break editor
+Leave management
+Availability calendar
+Dashboard
+Today's appointments
+Queue widget
+Pending consultations
+Notifications
+16. Backend Tasks
+Doctor CRUD APIs
+Schedule engine
+Slot generation service
+Availability calculation
+Leave service
+Holiday service
+Appointment conflict validation
+Schedule cache
+Audit logging
+17. DevOps Tasks
+Database migrations (Flyway)
+API deployment
+Cache configuration (Redis)
+Monitoring for scheduling APIs
+Backup of scheduling data
+Environment variables for clinic defaults
+18. QA Test Scenarios
+Create doctor
+Update doctor profile
+Configure weekly schedule
+Add break time
+Apply leave
+Verify appointment slots
+Prevent overlapping slots
+Block bookings during leave
+Search doctors
+View doctor dashboard
+Validate consultation fee
+Check holiday blocking
+19. Acceptance Criteria
+
+This module is complete when:
+
+Clinic Admin can create and manage doctors.
+Doctors have configurable weekly schedules.
+Appointment slots are generated correctly.
+Double booking is prevented.
+Leave blocks appointment booking.
+Holidays block appointment booking.
+Patients can search available doctors.
+Reception can view doctor schedules.
+APIs match the OpenAPI specification.
+All changes are audited.
+Multi-tenant isolation is enforced.
+20. Future Enhancements
+
+Future releases may include:
+
+Multiple clinic affiliations
+AI-based schedule optimization
+Google Calendar synchronization
+Outlook Calendar synchronization
+Dynamic consultation pricing
+Video consultation scheduling
+Automatic waitlist management
+Smart rescheduling
+Doctor performance analytics
+Capacity forecasting
+Document Summary
+
+The Doctor Management & Scheduling module provides the operational foundation for appointment booking and consultation workflows. It ensures that doctor availability is accurate, configurable, and synchronized across patient, reception, and administrative views while supporting secure multi-tenant operations.
