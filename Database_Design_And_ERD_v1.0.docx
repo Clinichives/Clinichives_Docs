@@ -1,0 +1,527 @@
+Product: Clinora
+
+Version: 1.0
+
+Document Type: Database Design & Entity Relationship Document (ERD)
+
+Audience: Backend Developers, Database Engineers, Architects, QA, DevOps
+
+1. Purpose
+
+This document defines the logical database design for the Clinora platform.
+
+It describes the core entities, relationships, database rules, naming conventions, indexing strategy, audit requirements, and multi-tenant design.
+
+This document acts as the single source of truth for backend development and database implementation.
+
+2. Database Technology
+Component	Technology
+Database	PostgreSQL
+ORM	Spring Data JPA / Hibernate
+Migration	Flyway
+UUID	UUID Primary Keys
+Soft Delete	Supported
+Audit	Created/Updated timestamps
+3. Design Principles
+
+Every table should follow these standards:
+
+UUID primary keys
+Audit fields
+Tenant isolation
+Soft delete support
+Foreign key relationships
+Optimized indexes
+Normalized schema (avoid unnecessary duplication)
+4. Core Entity Groups
+
+The database is organized into domains:
+
+Authentication
+
+↓
+
+Clinic
+
+↓
+
+Users
+
+↓
+
+Doctors
+
+↓
+
+Patients
+
+↓
+
+Appointments
+
+↓
+
+Consultations
+
+↓
+
+Prescriptions
+
+↓
+
+Laboratory
+
+↓
+
+Payments
+
+↓
+
+Notifications
+
+↓
+
+Reports
+
+↓
+
+Audit
+5. Authentication Domain
+clinics
+
+Stores clinic information.
+
+Columns
+
+id
+name
+clinic_code
+email
+phone
+address
+subscription_plan
+status
+created_at
+updated_at
+users
+
+Stores all system users.
+
+Columns
+
+id
+clinic_id
+role_id
+first_name
+last_name
+email
+mobile
+password_hash
+status
+last_login
+created_at
+updated_at
+roles
+id
+name
+description
+permissions
+id
+module
+action
+description
+role_permissions
+
+Maps permissions to roles.
+
+6. Patient Domain
+patients
+id
+clinic_id
+patient_number
+first_name
+last_name
+gender
+dob
+mobile
+email
+blood_group
+address
+emergency_contact
+status
+created_at
+updated_at
+patient_allergies
+id
+patient_id
+allergy
+severity
+notes
+patient_documents
+id
+patient_id
+document_type
+file_path
+uploaded_at
+7. Doctor Domain
+doctors
+id
+clinic_id
+employee_code
+name
+specialization
+experience
+consultation_fee
+status
+doctor_schedule
+id
+doctor_id
+day_of_week
+start_time
+end_time
+slot_duration
+doctor_leave
+id
+doctor_id
+start_date
+end_date
+reason
+status
+8. Appointment Domain
+appointments
+id
+clinic_id
+patient_id
+doctor_id
+appointment_date
+appointment_start
+appointment_end
+booking_channel
+appointment_status
+payment_status
+created_by
+reason
+
+Booking Channels
+
+ONLINE
+
+RECEPTION
+
+PHONE
+
+WALK_IN
+
+Statuses
+
+BOOKED
+
+CONFIRMED
+
+CHECKED_IN
+
+IN_PROGRESS
+
+COMPLETED
+
+CANCELLED
+
+NO_SHOW
+appointment_history
+
+Tracks every status change.
+
+appointment_id
+old_status
+new_status
+changed_by
+changed_at
+9. Consultation Domain
+consultations
+id
+appointment_id
+doctor_id
+patient_id
+chief_complaint
+diagnosis
+clinical_notes
+follow_up_date
+created_at
+vitals
+id
+consultation_id
+temperature
+pulse
+bp
+height
+weight
+oxygen
+10. Prescription Domain
+prescriptions
+id
+consultation_id
+doctor_id
+patient_id
+remarks
+pdf_url
+prescription_items
+id
+prescription_id
+medicine_name
+strength
+dosage
+frequency
+duration
+instructions
+11. Laboratory Domain
+lab_orders
+id
+consultation_id
+patient_id
+doctor_id
+status
+ordered_date
+lab_order_items
+id
+lab_order_id
+test_name
+status
+lab_reports
+id
+lab_order_id
+file_url
+uploaded_by
+uploaded_at
+status
+12. Billing Domain
+invoices
+id
+clinic_id
+patient_id
+appointment_id
+invoice_number
+total_amount
+discount
+tax
+net_amount
+status
+invoice_items
+id
+invoice_id
+item_name
+quantity
+unit_price
+13. Payment Domain
+payments
+id
+invoice_id
+payment_provider
+transaction_id
+amount
+payment_status
+payment_method
+paid_at
+
+Payment Methods
+
+Cash
+
+UPI
+
+Card
+
+Online
+refunds
+id
+payment_id
+refund_amount
+reason
+status
+14. Notification Domain
+notification_jobs
+id
+clinic_id
+patient_id
+appointment_id
+channel
+status
+retry_count
+scheduled_at
+sent_at
+notification_templates
+id
+template_name
+channel
+subject
+body
+15. Audit Domain
+audit_logs
+id
+clinic_id
+user_id
+action
+entity
+entity_id
+old_value
+new_value
+ip_address
+created_at
+16. Entity Relationships
+Clinic
+   │
+   ├──────── Users
+   │
+   ├──────── Doctors
+   │
+   ├──────── Patients
+   │
+   ├──────── Appointments
+   │
+   ├──────── Invoices
+   │
+   └──────── Notifications
+
+Patient
+      │
+      ├──── Appointments
+      │
+      ├──── Consultations
+      │
+      ├──── Prescriptions
+      │
+      ├──── Lab Orders
+      │
+      └──── Payments
+
+Doctor
+      │
+      ├──── Schedule
+      ├──── Appointments
+      ├──── Consultation
+      └──── Prescriptions
+17. Multi-Tenant Rule
+
+Every business table includes:
+
+clinic_id
+
+Every query automatically filters using:
+
+WHERE clinic_id = ?
+
+No cross-clinic access is permitted.
+
+18. Audit Columns
+
+Every table contains:
+
+created_by
+
+created_at
+
+updated_by
+
+updated_at
+
+Optional
+
+deleted_at
+
+deleted_by
+19. Index Strategy
+
+Indexes should exist for:
+
+clinic_id
+
+patient_id
+
+doctor_id
+
+appointment_date
+
+payment_status
+
+email
+
+mobile
+
+invoice_number
+
+transaction_id
+
+Composite indexes:
+
+(clinic_id, appointment_date)
+
+(clinic_id, doctor_id)
+
+(clinic_id, patient_id)
+20. Database Constraints
+
+Examples:
+
+Unique email per clinic
+Unique mobile per clinic
+Unique patient number per clinic
+Unique invoice number per clinic
+Prevent duplicate active appointments for the same doctor and time slot
+Foreign keys enforce data integrity
+21. Future Tables
+
+Future releases may add:
+
+Insurance Claims
+Inventory
+Pharmacy
+CRM
+Marketing Campaigns
+AI Conversation History
+Telemedicine Sessions
+Multi-Branch Support
+22. Migration Strategy
+
+All schema changes must be managed using Flyway.
+
+Example:
+
+V1__Create_Clinic.sql
+V2__Create_User.sql
+V3__Create_Patient.sql
+V4__Create_Doctor.sql
+...
+
+This ensures every environment (development, QA, production) stays synchronized.
+
+23. Naming Standards
+
+Tables
+
+Lowercase
+Plural names
+Snake case
+
+Example:
+
+patients
+appointments
+lab_reports
+
+Columns
+
+first_name
+appointment_date
+created_at
+
+Primary Keys
+
+id
+
+Foreign Keys
+
+patient_id
+doctor_id
+clinic_id
+24. Document Summary
+
+This document defines the complete logical data model for Clinora. It provides the foundation for backend implementation, API development, reporting, analytics, and future scalability while maintaining tenant isolation and data integrity.
