@@ -1,0 +1,363 @@
+Product: Clinora
+
+Version: 1.0
+
+Document Type: User Roles & Permission Matrix
+
+Audience: Product Manager, Architects, Frontend, Backend, QA, DevOps
+
+1. Purpose
+
+The purpose of this document is to define the user roles within the Clinora platform and establish role-based access control (RBAC) for all application modules.
+
+This document ensures that every user accesses only the information and functionality required for their responsibilities while maintaining patient privacy, tenant isolation, and platform security.
+
+2. Access Hierarchy
+Clinora Platform
+
+                Super Admin
+                     │
+          -----------------------
+          │                     │
+     Clinic Admin          Platform Support
+          │
+---------------------------------------------
+│          │           │            │
+Reception  Doctor      Lab       Accountant*
+          │
+       Patient
+
+(*Future Role)
+
+3. Role Definitions
+3.1 Super Admin
+Description
+
+The Super Admin manages the Clinora platform and all tenant organizations.
+
+This role is intended only for the Clinora operations team.
+
+Responsibilities
+Onboard clinics
+Manage subscriptions
+Monitor platform health
+View tenant usage
+Configure platform settings
+Manage feature flags
+Support tenant onboarding
+
+Cannot:
+
+Edit clinical records
+Write prescriptions
+Modify consultations
+3.2 Clinic Administrator
+Description
+
+Owns and manages one clinic.
+
+Responsible for business operations.
+
+Responsibilities
+Configure clinic
+Manage doctors
+Manage reception staff
+Manage lab staff
+Configure schedules
+Configure consultation fees
+View analytics
+View revenue
+Configure payment settings
+Configure branding
+
+Cannot:
+
+Access another clinic
+Modify platform settings
+3.3 Reception / Clinic Staff
+Description
+
+Handles patient operations.
+
+Responsibilities
+Register patients
+Search patients
+Book appointments
+Reschedule appointments
+Cancel appointments
+Register walk-ins
+Check-in patients
+Collect payments
+Print invoices
+Manage waiting queue
+
+Cannot
+
+Write prescriptions
+Upload lab reports
+View financial analytics
+Configure clinic settings
+3.4 Doctor
+Description
+
+Primary healthcare provider.
+
+Responsibilities
+View appointments
+Search assigned patients
+Access patient timeline
+Record consultations
+Add diagnoses
+Write prescriptions
+Request laboratory tests
+Review reports
+Schedule follow-ups
+
+Cannot
+
+Modify billing
+Manage staff
+Configure clinic settings
+3.5 Laboratory Staff
+Description
+
+Responsible for diagnostics.
+
+Responsibilities
+View lab requests
+Collect samples
+Update sample status
+Upload reports
+Notify doctor
+Notify patient
+
+Cannot
+
+Modify prescriptions
+View clinic revenue
+Manage appointments
+3.6 Patient
+Description
+
+End user receiving healthcare.
+
+Responsibilities
+Register
+Login
+Book appointments
+Cancel appointments
+Pay invoices
+Download reports
+Download prescriptions
+View history
+Update profile
+
+Cannot
+
+View other patients
+Access doctor dashboard
+Access clinic administration
+4. Permission Levels
+
+Every module follows one of these permissions.
+
+Permission	Description
+View	Read information
+Create	Add new records
+Update	Modify existing records
+Delete	Remove records
+Approve	Administrative approval
+Export	Download reports
+Configure	Change settings
+5. Module Permission Matrix
+Module	Super Admin	Clinic Admin	Reception	Doctor	Lab	Patient
+Clinic Settings	✔	✔	✘	✘	✘	✘
+User Management	✔	✔	✘	✘	✘	✘
+Patient Registration	✘	✔	✔	✘	✘	Self
+Patient Search	✘	✔	✔	✔	✔	Self
+Patient History	✘	✔	Limited	✔	Limited	Self
+Appointment Booking	✘	✔	✔	Limited	✘	✔
+Calendar	✘	✔	✔	✔	✘	✔
+Queue Management	✘	✔	✔	View	✘	View
+Consultation	✘	View	✘	✔	✘	View
+Prescription	✘	View	✘	✔	✘	View
+Lab Orders	✘	View	View	✔	✔	View
+Lab Reports	✘	View	View	✔	✔	View
+Payments	✘	✔	✔	View	✘	Own
+Revenue Reports	View	✔	✘	✘	✘	✘
+Dashboard	✔	✔	✔	✔	✔	✔
+6. Tenant Isolation Rules
+
+Every authenticated request must include:
+
+Tenant (Clinic)
+
+↓
+
+User
+
+↓
+
+Role
+
+↓
+
+Permissions
+
+Every database query must automatically filter using:
+
+clinic_id
+
+Example
+
+Doctor from Clinic A
+
+Cannot access
+
+Patient from Clinic B
+
+7. Authentication Rules
+
+All users must authenticate using:
+
+Email or Mobile Number
+Password
+JWT Access Token
+Refresh Token
+
+Future:
+
+Multi-Factor Authentication (MFA)
+OTP Login
+Biometric Login (Mobile)
+8. Authorization Rules
+
+Authorization is enforced at multiple levels.
+
+UI
+
+Users only see menus they are authorized to access.
+
+Example
+
+Patient
+
+Appointments
+
+Reports
+
+Payments
+
+Doctor menu never appears.
+
+API
+
+Every API validates:
+
+Authentication
+
+↓
+
+Role
+
+↓
+
+Tenant
+
+↓
+
+Permission
+Database
+
+Every query validates:
+
+clinic_id
+
+before returning data.
+
+9. Audit Requirements
+
+The following actions must be audited:
+
+Login
+Logout
+Appointment Creation
+Appointment Cancellation
+Prescription Creation
+Report Upload
+Payment Collection
+Clinic Configuration Changes
+User Creation
+Permission Changes
+
+Each audit record includes:
+
+User
+Role
+Clinic
+Timestamp
+IP Address
+Action
+Resource
+Outcome
+10. Future Roles
+
+The platform is designed to support additional roles.
+
+Examples
+
+Accountant
+Revenue
+Expenses
+GST Reports
+Inventory Manager
+Medicines
+Consumables
+Vendors
+Insurance Coordinator
+Claims
+Policy Verification
+TPA Communication
+Marketing Manager
+Campaigns
+SMS
+WhatsApp
+Email Marketing
+Pharmacy Staff
+Dispense Medicines
+Inventory
+Barcode
+Prescription Verification
+AI Assistant
+
+(Not a human role)
+
+Capabilities
+
+Patient Summary
+Clinical Search
+Note Generation
+Appointment Assistant
+11. Security Principles
+
+Clinora follows the principle of Least Privilege.
+
+Users receive only the minimum permissions necessary to perform their responsibilities.
+
+Role permissions are managed centrally and enforced consistently across the frontend, backend, APIs, and database.
+
+12. Future Enhancements
+
+The role management system is designed to support:
+
+Custom Roles
+Custom Permissions
+Department-Based Access
+Attribute-Based Access Control (ABAC)
+Multi-Clinic Users
+Temporary Access
+Approval Workflows
+External Identity Providers (Google, Microsoft Entra ID, Okta)
+Document Summary
+
+This document defines the security and access model for Clinora. It serves as the foundation for UI visibility, backend authorization, API security, and database isolation.
