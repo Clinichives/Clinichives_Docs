@@ -1,0 +1,394 @@
+Product: Clinora
+Module: Authentication & Tenant Onboarding
+Document Type: Product Requirements Document (PRD)
+Version: 1.0
+Status: Draft
+
+1. Purpose
+
+This document defines the functional and technical requirements for the Authentication and Tenant Management module of Clinora.
+
+This module is the entry point to the platform and provides secure access for all users while ensuring complete tenant isolation between clinics.
+
+The module supports onboarding new clinics, creating users, authenticating users, managing sessions, and enforcing role-based access control.
+
+2. Business Objective
+
+Provide a secure authentication system that allows multiple clinics to use the same Clinora platform while ensuring:
+
+Secure login
+Tenant isolation
+Role-based access
+User lifecycle management
+Secure session management
+Easy onboarding of new clinics
+3. Actors
+Actor	Description
+Super Admin	Creates clinics and subscriptions
+Clinic Admin	Manages clinic users
+Reception	Uses assigned account
+Doctor	Uses assigned account
+Lab Staff	Uses assigned account
+Patient	Registers and books appointments
+4. User Stories
+US-001
+
+As a Super Admin,
+
+I want to register a new clinic,
+
+so that it can start using Clinora.
+
+US-002
+
+As a Clinic Admin,
+
+I want to invite doctors,
+
+so they can access the clinic.
+
+US-003
+
+As a Patient,
+
+I want to create an account,
+
+so that I can book appointments online.
+
+US-004
+
+As a User,
+
+I want to login securely,
+
+so I can access my dashboard.
+
+US-005
+
+As a User,
+
+I want to reset my password,
+
+so I can regain access if I forget it.
+
+5. Functional Requirements
+Clinic Registration
+
+Super Admin should be able to
+
+Create Clinic
+Enter Clinic Name
+Clinic Address
+Contact Number
+Subscription Plan
+Timezone
+Currency
+Clinic Logo
+Clinic Domain (Future)
+
+System automatically creates
+
+Clinic ID
+Clinic Admin Account
+Default Roles
+Default Permissions
+Clinic Admin Management
+
+Clinic Admin can
+
+Invite Users
+Activate Users
+Disable Users
+Reset Password
+Assign Roles
+
+Cannot
+
+Create another clinic
+Access another clinic
+User Registration
+
+Supported users
+
+Patient
+Doctor
+Reception
+Lab Staff
+
+Doctor, Reception and Lab accounts are created by Clinic Admin.
+
+Patients may
+
+Self-register
+Be created by Reception
+Login
+
+Support login using
+
+Email
+Mobile Number (Future)
+Google Login (Future)
+Logout
+
+Invalidate
+
+Access Token
+Refresh Token
+Forgot Password
+
+Flow
+
+Forgot Password
+
+↓
+
+Enter Email
+
+↓
+
+OTP
+
+↓
+
+Reset Password
+
+↓
+
+Login
+Session Management
+
+Support
+
+JWT Access Token
+Refresh Token
+Session Expiration
+
+Future
+
+Multi-device sessions
+Logout from all devices
+6. Business Rules
+One email belongs to one user.
+Every user belongs to one clinic.
+Users cannot access another clinic.
+Passwords must never be stored in plain text.
+Login attempts should be rate limited.
+Failed login attempts should be monitored.
+7. UI Screens
+Super Admin
+Login
+Clinics List
+Create Clinic
+Clinic Details
+Clinic Admin
+Login
+Dashboard
+Users
+Invite User
+User Details
+Patient
+Register
+Login
+Forgot Password
+8. Backend APIs
+
+Authentication
+
+POST /api/v1/auth/login
+
+POST /api/v1/auth/logout
+
+POST /api/v1/auth/refresh
+
+POST /api/v1/auth/forgot-password
+
+POST /api/v1/auth/reset-password
+
+Clinic
+
+POST /api/v1/clinics
+
+GET /api/v1/clinics
+
+PATCH /api/v1/clinics/{id}
+
+Users
+
+POST /api/v1/users
+
+GET /api/v1/users
+
+PATCH /api/v1/users/{id}
+
+DELETE /api/v1/users/{id}
+9. Database Tables
+
+This module uses
+
+clinics
+
+users
+
+roles
+
+permissions
+
+role_permissions
+
+user_sessions
+
+audit_logs
+10. Frontend Tasks
+Sprint Tasks
+
+Authentication
+
+Login Page
+Forgot Password
+Reset Password
+JWT Storage
+Logout
+Protected Routes
+Unauthorized Page
+Session Timeout Popup
+
+Clinic Admin
+
+Users List
+Invite User
+Edit User
+Disable User
+
+Patient
+
+Registration
+Login
+11. Backend Tasks
+
+Authentication
+
+JWT Authentication
+Refresh Tokens
+Password Encryption (BCrypt)
+Login Service
+Logout Service
+Password Reset
+OTP Service
+
+Clinic
+
+Create Clinic API
+Update Clinic
+Tenant Context
+
+User
+
+CRUD APIs
+Role Assignment
+User Status
+
+Security
+
+Spring Security
+RBAC
+Tenant Filter
+Audit Logs
+12. DevOps Tasks
+
+Infrastructure
+
+Secrets Manager
+JWT Secret
+SMTP Configuration
+Environment Variables
+Database Migration (Flyway)
+
+CI/CD
+
+GitHub Actions
+Docker Build
+Deployment
+
+Monitoring
+
+Login Failures
+Authentication Errors
+13. Validation Rules
+
+Email
+
+Unique
+Valid format
+
+Password
+
+Minimum 8 characters
+Uppercase
+Lowercase
+Number
+Special Character
+
+Clinic Name
+
+Required
+Maximum 150 characters
+14. Security Requirements
+BCrypt password hashing
+HTTPS only
+JWT Authentication
+Refresh Tokens
+CSRF protection (if applicable)
+Secure cookies (if used)
+Account lockout after repeated failures
+Audit logging
+Tenant validation on every request
+15. Notifications
+
+Send emails for
+
+User Invitation
+Welcome Email
+Password Reset
+Password Changed
+
+Future
+
+SMS
+WhatsApp
+16. Acceptance Criteria
+
+A feature is complete when:
+
+A Super Admin can create a clinic.
+A Clinic Admin can invite users.
+A Patient can register and log in.
+Users receive JWT tokens after successful login.
+Unauthorized users cannot access protected APIs.
+Users can reset forgotten passwords.
+Every request is restricted to the correct clinic.
+All authentication events are recorded in audit logs.
+17. Out of Scope (MVP)
+
+The following features are planned for future releases:
+
+Multi-factor authentication (MFA)
+Single Sign-On (Google, Microsoft, Okta)
+Social login
+Biometric authentication
+Passwordless login
+Multiple active organizations per user
+Fine-grained custom roles
+Self-service clinic registration
+18. Definition of Done
+
+This module is considered complete when:
+
+UI screens are implemented and approved.
+Backend APIs match the OpenAPI specification.
+Database migrations are applied successfully.
+Unit and integration tests pass.
+Authentication and authorization are validated.
+Tenant isolation is verified.
+Audit logging is operational.
+CI/CD deployment succeeds.
+QA signs off all acceptance criteria.
