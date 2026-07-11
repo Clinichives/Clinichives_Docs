@@ -1,0 +1,1305 @@
+# Clinora Patient Management Product Requirements Document
+
+**Product:** Clinora
+**Module:** Patient Management
+**Document Type:** Product Requirements Document
+**Version:** 1.0
+**Status:** Draft
+**Prepared By:** Product Management and Engineering
+**Audience:** Product, UI/UX, Frontend, Backend, QA, DevOps and Architecture Teams
+
+---
+
+## 1. Purpose
+
+The purpose of this document is to define the business, functional, security, data, user-interface and technical requirements for the Patient Management module of Clinora.
+
+The Patient Management module provides the central patient record used throughout the Clinora platform. It allows authorized clinic users to register, search, view and update patients while allowing patients to manage selected portions of their own profiles.
+
+This module serves as the foundation for:
+
+* Appointment booking
+* Consultation and electronic medical records
+* Prescriptions
+* Laboratory orders and reports
+* Billing and payments
+* Patient communication
+* Follow-up care
+* Reporting and analytics
+
+---
+
+## 2. Business Objective
+
+The objective of the Patient Management module is to provide every clinic with a secure, accurate and centralized patient record.
+
+The module should reduce duplicate registration, manual data entry and fragmented patient information while enabling doctors and clinic staff to access the information required for patient care and daily operations.
+
+The module must also support Clinora’s multi-tenant SaaS architecture by ensuring that one clinic cannot access another clinic’s patient data.
+
+---
+
+## 3. Scope
+
+### 3.1 Included in MVP
+
+The MVP will include:
+
+* Patient self-registration
+* Patient registration by reception staff
+* Patient registration by clinic administrators
+* Patient search
+* Patient profile
+* Patient demographic information
+* Contact information
+* Emergency contact
+* Basic medical information
+* Allergies
+* Existing medical conditions
+* Patient status
+* Patient appointment history
+* Patient consultation history
+* Prescription list
+* Laboratory report list
+* Invoice and payment history
+* Patient timeline
+* Patient document upload
+* Profile updates
+* Duplicate patient detection
+* Tenant isolation
+* Audit logging
+
+### 3.2 Out of Scope for MVP
+
+The following items are planned for later releases:
+
+* Family-account management
+* Dependents and guardian accounts
+* Cross-clinic medical-record sharing
+* National health identification integration
+* Ayushman Bharat Digital Mission integration
+* Insurance-policy management
+* Patient-consent management for external sharing
+* Patient record merge workflow
+* Data import from external EMR systems
+* Mobile biometric identification
+* Advanced clinical coding
+* AI-generated patient summaries
+* Voice-based patient search
+
+---
+
+## 4. Actors
+
+| Actor                | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| Patient              | Registers, views and updates selected personal information                     |
+| Reception Staff      | Registers and searches patients for appointments and billing                   |
+| Doctor               | Views assigned or authorized patient information and clinical history          |
+| Laboratory Staff     | Views limited patient information required for lab processing                  |
+| Clinic Administrator | Manages patient records within the clinic                                      |
+| Clinora Super Admin  | Manages the platform but does not normally access clinical records             |
+| System               | Performs validation, duplicate detection, audit logging and tenant enforcement |
+
+---
+
+## 5. User Personas and Needs
+
+### 5.1 Patient
+
+The patient needs to:
+
+* Register quickly
+* Avoid entering the same information repeatedly
+* View personal details
+* View appointments
+* Access prescriptions
+* Access lab reports
+* View invoices and payments
+* Update permitted profile fields
+
+### 5.2 Reception Staff
+
+Reception staff need to:
+
+* Search patients quickly
+* Identify existing patients
+* Register new patients during phone, walk-in or online bookings
+* Update contact details
+* View appointment and payment information
+* Avoid duplicate registrations
+
+### 5.3 Doctor
+
+The doctor needs to:
+
+* Find a patient
+* View relevant demographics
+* View allergies and medical conditions
+* View past consultations
+* View prescriptions
+* View lab reports
+* View a complete patient timeline
+
+### 5.4 Laboratory Staff
+
+Laboratory staff need to:
+
+* Identify the correct patient
+* View lab orders
+* Verify patient information
+* Upload reports
+* Avoid access to unnecessary clinical or financial data
+
+### 5.5 Clinic Administrator
+
+The clinic administrator needs to:
+
+* View and manage patient records within the clinic
+* Review patient growth
+* Manage inactive patient records
+* Export permitted operational information
+* Review audit history where authorized
+
+---
+
+## 6. User Stories
+
+### US-PAT-001: Patient Self-Registration
+
+As a patient, I want to create my account so that I can book appointments and access my healthcare records.
+
+### US-PAT-002: Staff Patient Registration
+
+As a receptionist, I want to register a patient so that I can book an appointment on the patient’s behalf.
+
+### US-PAT-003: Patient Search
+
+As a receptionist or doctor, I want to search for a patient using name, mobile number or patient number so that I can quickly access the correct patient record.
+
+### US-PAT-004: Patient Profile
+
+As an authorized clinic user, I want to view a patient profile so that I can confirm demographic and contact information.
+
+### US-PAT-005: Update Patient Information
+
+As an authorized user, I want to update permitted patient information so that records remain accurate.
+
+### US-PAT-006: Patient Timeline
+
+As a doctor, I want to view the patient’s complete clinical timeline so that I can understand previous care before starting a consultation.
+
+### US-PAT-007: Duplicate Detection
+
+As a receptionist, I want the system to warn me when a similar patient already exists so that I do not create duplicate records.
+
+### US-PAT-008: Patient Documents
+
+As an authorized user, I want to upload supporting documents so that relevant records are available digitally.
+
+### US-PAT-009: Patient Status Management
+
+As a clinic administrator, I want to activate or deactivate a patient record so that unused or invalid profiles are managed appropriately.
+
+### US-PAT-010: Patient Self-Service Profile Update
+
+As a patient, I want to update my contact details so that the clinic can communicate with me correctly.
+
+---
+
+## 7. End-to-End Patient Registration Flow
+
+### 7.1 Patient Self-Registration
+
+```text
+Patient opens clinic website
+        ↓
+Selects Register
+        ↓
+Enters mobile number or email
+        ↓
+Completes verification
+        ↓
+Enters profile information
+        ↓
+System validates duplicate records
+        ↓
+Patient account created
+        ↓
+Patient dashboard displayed
+```
+
+### 7.2 Reception Registration
+
+```text
+Reception opens Patient Search
+        ↓
+Searches mobile number or name
+        ↓
+Patient found?
+   ┌───────────────┐
+   │ Yes           │ No
+   ↓               ↓
+Open existing    Create new patient
+patient          record
+   │               │
+   └───────┬───────┘
+           ↓
+Continue appointment booking
+```
+
+### 7.3 Patient Search and Profile Access
+
+```text
+Authorized user searches patient
+        ↓
+System validates clinic and role
+        ↓
+Search results returned
+        ↓
+User selects patient
+        ↓
+Patient profile and permitted information displayed
+```
+
+---
+
+## 8. Functional Requirements
+
+### FR-PAT-001: Create Patient
+
+The system shall allow authorized users to create a patient record.
+
+Required fields for MVP:
+
+* First name
+* Last name, where applicable
+* Mobile number
+* Date of birth or age
+* Gender
+* Clinic identifier
+* Registration source
+* Consent acknowledgement where required
+
+Optional fields:
+
+* Email
+* Blood group
+* Address
+* Emergency contact
+* Preferred language
+* Marital status
+* Occupation
+* Identification document
+* Referral source
+
+### FR-PAT-002: Generate Patient Number
+
+The system shall generate a unique patient number within the clinic.
+
+Example:
+
+```text
+CLN-2026-000145
+```
+
+The patient number must:
+
+* Be unique within the clinic
+* Be immutable after creation
+* Be suitable for display on receipts, prescriptions and reports
+
+### FR-PAT-003: Search Patient
+
+The system shall support patient search using:
+
+* Patient number
+* Mobile number
+* Email
+* First name
+* Last name
+* Full name
+* Date of birth
+* Partial name
+* Appointment reference
+
+Search results shall be tenant-filtered and permission-filtered.
+
+### FR-PAT-004: View Patient Profile
+
+The patient profile shall display permitted information including:
+
+* Patient number
+* Name
+* Age and date of birth
+* Gender
+* Mobile number
+* Email
+* Address
+* Emergency contact
+* Blood group
+* Allergies
+* Medical conditions
+* Recent appointment
+* Upcoming appointment
+* Latest prescription
+* Latest lab report
+* Payment status summary
+
+### FR-PAT-005: Update Patient Profile
+
+Authorized users may update permitted profile fields.
+
+The system shall:
+
+* Validate changed values
+* Record old and new values
+* Record who made the change
+* Record the timestamp
+* Prevent unauthorized changes to protected fields
+
+### FR-PAT-006: Duplicate Detection
+
+Before creating a patient, the system shall check for possible duplicates using:
+
+* Mobile number
+* Email
+* Full name and date of birth
+* Full name and gender
+* Government identifier, if collected in future
+
+When a potential duplicate is found, the system shall:
+
+* Display matching profiles
+* Allow the user to open the existing record
+* Require confirmation before creating a new record
+* Log an override when a new record is created despite a match
+
+### FR-PAT-007: Patient Timeline
+
+The system shall provide a chronological patient timeline containing permitted events such as:
+
+* Registration
+* Appointments
+* Check-ins
+* Consultations
+* Diagnoses
+* Prescriptions
+* Lab orders
+* Lab reports
+* Invoices
+* Payments
+* Refunds
+* Follow-up recommendations
+* Uploaded documents
+
+The timeline shall support filtering by:
+
+* Date range
+* Event type
+* Doctor
+* Appointment
+* Clinical or financial category
+
+### FR-PAT-008: Patient History
+
+The system shall display patient history in organized sections:
+
+* Appointment history
+* Consultation history
+* Prescription history
+* Lab-order history
+* Lab-report history
+* Invoice history
+* Payment history
+
+### FR-PAT-009: Patient Documents
+
+Authorized users shall be able to upload documents such as:
+
+* Previous prescriptions
+* External lab reports
+* Referral letters
+* Identification documents
+* Insurance documents in future
+
+The system shall store:
+
+* Document type
+* File name
+* Secure object-storage reference
+* Uploading user
+* Upload date
+* Clinic ID
+* Patient ID
+* Description
+* Document status
+
+### FR-PAT-010: Patient Status
+
+Supported patient statuses:
+
+```text
+ACTIVE
+INACTIVE
+DECEASED
+DUPLICATE_SUSPECTED
+ARCHIVED
+```
+
+Status changes must:
+
+* Require appropriate permission
+* Be audited
+* Not permanently delete clinical records
+
+### FR-PAT-011: Patient Self-Service
+
+Patients shall be able to:
+
+* View their own profile
+* Update mobile number after verification
+* Update email after verification
+* Update address
+* Update preferred language
+* Update emergency contact
+* View appointments
+* View prescriptions
+* View lab reports
+* View invoices and payments
+
+Patients shall not be able to directly modify:
+
+* Clinical notes
+* Diagnoses
+* Prescriptions
+* Lab results
+* Payment-confirmation status
+* Doctor-entered medical history
+
+### FR-PAT-012: Patient Consent
+
+The system shall capture basic consent acknowledgement for:
+
+* Platform use
+* Communication notifications
+* Medical-record processing
+* Terms and privacy-policy acceptance
+
+More advanced consent workflows will be introduced in future releases.
+
+---
+
+## 9. Business Rules
+
+### BR-PAT-001
+
+Every patient record must belong to one clinic in the MVP.
+
+### BR-PAT-002
+
+Every patient record must contain a valid clinic identifier.
+
+### BR-PAT-003
+
+A patient must not access another patient’s information.
+
+### BR-PAT-004
+
+Clinic users must not access patients from another clinic.
+
+### BR-PAT-005
+
+A mobile number may be unique within a clinic, subject to approved family-account rules in future.
+
+### BR-PAT-006
+
+A patient number must be unique within a clinic.
+
+### BR-PAT-007
+
+Patient clinical records must not be permanently deleted through normal application functions.
+
+### BR-PAT-008
+
+Patient demographic changes must be audited.
+
+### BR-PAT-009
+
+The frontend must not provide or override the clinic identifier for protected operations.
+
+### BR-PAT-010
+
+The backend shall derive clinic context from the authenticated session or token.
+
+### BR-PAT-011
+
+Doctors may view patient clinical history only when authorized by clinic policy and assigned access rules.
+
+### BR-PAT-012
+
+Laboratory staff shall receive only the minimum information required to process laboratory work.
+
+---
+
+## 10. Role-Based Access
+
+| Capability               | Super Admin |    Clinic Admin | Reception |   Doctor |             Lab |            Patient |
+| ------------------------ | ----------: | --------------: | --------: | -------: | --------------: | -----------------: |
+| Create patient           |          No |             Yes |       Yes | Optional |              No |               Self |
+| Search patients          |          No |             Yes |       Yes |      Yes |         Limited |               Self |
+| View demographics        |  Restricted |             Yes |       Yes |      Yes |         Limited |               Self |
+| Edit demographics        |          No |             Yes |       Yes |  Limited |              No |            Limited |
+| View clinical history    |          No |    Policy-based |   Limited |      Yes |              No | Own shared records |
+| View prescriptions       |          No |    Policy-based |   Limited |      Yes |              No |                Own |
+| View lab reports         |          No |    Policy-based |   Limited |      Yes | Relevant orders |                Own |
+| View payments            |          No |             Yes |       Yes |  Limited |              No |                Own |
+| Upload patient documents |          No |             Yes |       Yes |      Yes |         Limited |             Future |
+| Change patient status    |          No |             Yes |   Limited |       No |              No |                 No |
+| Export patient data      |          No | Authorized only |        No |       No |              No |  Own future export |
+
+---
+
+## 11. UI Requirements
+
+### 11.1 Patient List Page
+
+The page should contain:
+
+* Search field
+* Filter options
+* Add patient button
+* Patient number
+* Patient name
+* Age and gender
+* Mobile number
+* Last visit
+* Upcoming appointment
+* Status
+* Action menu
+* Pagination
+
+### 11.2 Patient Registration Page
+
+Sections:
+
+1. Basic information
+2. Contact details
+3. Address
+4. Emergency contact
+5. Basic medical information
+6. Consent acknowledgement
+
+The page should support:
+
+* Inline validation
+* Duplicate warnings
+* Save and continue
+* Cancel
+* Registration source selection
+* Mobile-friendly layout
+
+### 11.3 Patient Profile Page
+
+Suggested layout:
+
+```text
+Patient Header
+├── Name
+├── Patient Number
+├── Age / Gender
+├── Mobile
+├── Status
+└── Edit Action
+
+Profile Tabs
+├── Overview
+├── Timeline
+├── Appointments
+├── Consultations
+├── Prescriptions
+├── Lab Reports
+├── Billing
+└── Documents
+```
+
+### 11.4 Patient Timeline Page
+
+The timeline should:
+
+* Display newest events first by default
+* Allow chronological sorting
+* Support filtering
+* Show event source
+* Show doctor or staff member
+* Provide links to permitted details
+
+### 11.5 Patient Portal Profile
+
+The patient portal should display:
+
+* Personal information
+* Upcoming appointments
+* Recent prescriptions
+* Recent lab reports
+* Pending payments
+* Profile-update action
+
+---
+
+## 12. API Requirements
+
+### 12.1 Create Patient
+
+```http
+POST /api/v1/patients
+```
+
+Example request:
+
+```json
+{
+  "firstName": "Ravi",
+  "lastName": "Kumar",
+  "dateOfBirth": "1991-05-10",
+  "gender": "MALE",
+  "mobile": "9876543210",
+  "email": "ravi@example.com",
+  "registrationSource": "RECEPTION",
+  "preferredLanguage": "en"
+}
+```
+
+### 12.2 Search Patients
+
+```http
+GET /api/v1/patients?search=Ravi&page=0&size=20
+```
+
+### 12.3 Get Patient
+
+```http
+GET /api/v1/patients/{patientId}
+```
+
+### 12.4 Update Patient
+
+```http
+PATCH /api/v1/patients/{patientId}
+```
+
+### 12.5 Get Patient Timeline
+
+```http
+GET /api/v1/patients/{patientId}/timeline
+```
+
+### 12.6 Get Patient Appointments
+
+```http
+GET /api/v1/patients/{patientId}/appointments
+```
+
+### 12.7 Get Patient Prescriptions
+
+```http
+GET /api/v1/patients/{patientId}/prescriptions
+```
+
+### 12.8 Get Patient Lab Reports
+
+```http
+GET /api/v1/patients/{patientId}/lab-reports
+```
+
+### 12.9 Upload Patient Document
+
+```http
+POST /api/v1/patients/{patientId}/documents
+```
+
+### 12.10 Update Patient Status
+
+```http
+PATCH /api/v1/patients/{patientId}/status
+```
+
+---
+
+## 13. Standard API Error Cases
+
+| Error Code                | Description                               |
+| ------------------------- | ----------------------------------------- |
+| PATIENT_NOT_FOUND         | Patient does not exist or is inaccessible |
+| PATIENT_DUPLICATE_FOUND   | A possible duplicate record exists        |
+| PATIENT_NUMBER_CONFLICT   | Generated patient number is not unique    |
+| MOBILE_ALREADY_REGISTERED | Mobile number is already registered       |
+| EMAIL_ALREADY_REGISTERED  | Email is already registered               |
+| PATIENT_ACCESS_DENIED     | User does not have permission             |
+| INVALID_PATIENT_STATUS    | Requested status transition is invalid    |
+| PATIENT_VALIDATION_FAILED | Submitted data is invalid                 |
+| TENANT_ACCESS_DENIED      | User attempted cross-clinic access        |
+| DOCUMENT_UPLOAD_FAILED    | Patient document could not be uploaded    |
+
+---
+
+## 14. Database Requirements
+
+Primary tables:
+
+```text
+patients
+patient_contacts
+patient_addresses
+patient_emergency_contacts
+patient_allergies
+patient_conditions
+patient_documents
+patient_consents
+patient_status_history
+audit_logs
+```
+
+### 14.1 patients
+
+Suggested fields:
+
+```text
+id
+clinic_id
+user_id
+patient_number
+first_name
+middle_name
+last_name
+date_of_birth
+gender
+blood_group
+mobile
+email
+preferred_language
+registration_source
+status
+created_by
+created_at
+updated_by
+updated_at
+deleted_at
+```
+
+### 14.2 patient_allergies
+
+```text
+id
+clinic_id
+patient_id
+allergy_name
+severity
+reaction
+notes
+status
+created_at
+updated_at
+```
+
+### 14.3 patient_conditions
+
+```text
+id
+clinic_id
+patient_id
+condition_name
+diagnosed_date
+status
+notes
+created_at
+updated_at
+```
+
+### 14.4 patient_documents
+
+```text
+id
+clinic_id
+patient_id
+document_type
+file_name
+storage_key
+mime_type
+file_size
+description
+uploaded_by
+uploaded_at
+status
+```
+
+### 14.5 patient_consents
+
+```text
+id
+clinic_id
+patient_id
+consent_type
+consent_version
+accepted
+accepted_at
+source
+ip_address
+```
+
+---
+
+## 15. Data Validation Rules
+
+### Name
+
+* First name required
+* Maximum 100 characters
+* Leading and trailing spaces removed
+* Invalid special characters rejected
+
+### Mobile
+
+* Required for MVP registration
+* Must follow configured country format
+* India default should support valid 10-digit mobile numbers
+* Verification required for self-registration and sensitive updates
+
+### Email
+
+* Optional unless used for login
+* Must be valid format
+* Verification required when used as login identity
+
+### Date of Birth
+
+* Cannot be in the future
+* Age must be calculated from date of birth
+* Approximate age may be supported for patients without known DOB in future
+
+### Gender
+
+Supported MVP values:
+
+```text
+MALE
+FEMALE
+OTHER
+PREFER_NOT_TO_SAY
+```
+
+### Patient Number
+
+* Generated by backend
+* Must be unique per clinic
+* Must not be editable
+
+---
+
+## 16. Security and Privacy Requirements
+
+The module must implement:
+
+* HTTPS for all requests
+* JWT authentication
+* Role-based authorization
+* Tenant validation
+* Field-level output filtering
+* Secure file access
+* Audit logging
+* Sensitive-data masking
+* Input validation
+* Rate limiting for search where required
+* Protection against patient enumeration
+* Short-lived signed URLs for documents
+
+Application logs must not include:
+
+* Full medical history
+* Full addresses
+* Authentication tokens
+* Passwords
+* OTP values
+* Unnecessary government identifiers
+
+---
+
+## 17. Multi-Tenant Requirements
+
+Every patient-related table shall include `clinic_id` where appropriate.
+
+Every patient query shall be restricted using authenticated clinic context.
+
+Example:
+
+```sql
+SELECT *
+FROM patients
+WHERE clinic_id = :authenticatedClinicId
+  AND id = :patientId;
+```
+
+The backend shall not trust a clinic ID supplied by the browser.
+
+Cross-tenant access attempts must:
+
+* Return a safe error response
+* Be logged as a security event
+* Not reveal whether the external patient record exists
+
+---
+
+## 18. Audit Requirements
+
+The following events must be audited:
+
+* Patient creation
+* Patient profile update
+* Mobile number change
+* Email change
+* Patient status change
+* Allergy creation or modification
+* Medical-condition modification
+* Document upload
+* Document deletion or deactivation
+* Duplicate-warning override
+* Patient-record access where required by policy
+* Export or download of patient data
+
+Audit records should contain:
+
+* Clinic ID
+* User ID
+* Role
+* Action
+* Patient ID
+* Timestamp
+* Correlation ID
+* Outcome
+* Reason where required
+* Old and new values for supported changes
+
+---
+
+## 19. Notifications
+
+The system may send notifications for:
+
+* Patient account created
+* Mobile verification
+* Email verification
+* Profile updated
+* Mobile number changed
+* Email changed
+* Patient invitation
+* Appointment-related events handled by the appointment module
+
+Notification content must not expose sensitive clinical information unnecessarily.
+
+---
+
+## 20. Frontend Development Tasks
+
+### Foundation
+
+* Create patient routes
+* Create patient API service
+* Create patient data models
+* Create role guards
+* Create shared validation utilities
+
+### Patient List
+
+* Build patient table
+* Add search
+* Add filters
+* Add pagination
+* Add loading, empty and error states
+
+### Patient Registration
+
+* Build multi-section form
+* Add field validation
+* Add duplicate warning
+* Add registration-source selector
+* Add consent checkbox
+* Add success confirmation
+
+### Patient Profile
+
+* Build profile header
+* Build overview tab
+* Build appointments tab
+* Build timeline tab
+* Build prescriptions tab
+* Build lab reports tab
+* Build billing tab
+* Build documents tab
+
+### Patient Portal
+
+* Build personal-profile page
+* Build editable contact form
+* Add own-record restrictions
+* Add verification flow for contact changes
+
+---
+
+## 21. Backend Development Tasks
+
+### Domain and Persistence
+
+* Create patient entities
+* Create repositories
+* Create database migrations
+* Create patient-number generator
+* Add tenant-aware query methods
+* Add indexes and constraints
+
+### Services
+
+* Create patient-registration service
+* Create patient-search service
+* Create patient-profile service
+* Create duplicate-detection service
+* Create timeline aggregation service
+* Create status-management service
+* Create patient-document service
+* Create consent service
+
+### APIs
+
+* Implement create API
+* Implement search API
+* Implement profile API
+* Implement update API
+* Implement timeline API
+* Implement document APIs
+* Implement status API
+
+### Security
+
+* Apply RBAC
+* Apply tenant filtering
+* Apply field-level response rules
+* Add audit events
+* Add secure file-download validation
+
+### Testing
+
+* Unit tests
+* Repository tests
+* API integration tests
+* Authorization tests
+* Tenant-isolation tests
+* Duplicate-detection tests
+* Validation tests
+* Document-access tests
+
+---
+
+## 22. DevOps Requirements
+
+The Patient Management module requires:
+
+* PostgreSQL database
+* Flyway migrations
+* S3 bucket or approved object storage
+* IAM permissions for secure document upload and download
+* Secrets Manager configuration
+* CloudWatch application logs
+* Backup policies
+* S3 encryption and versioning
+* File-size and file-type restrictions
+* Malware-scanning strategy for uploaded documents in future
+* Development, QA and production configuration
+
+No patient information should be stored in environment variables or deployment manifests.
+
+---
+
+## 23. QA Test Scenarios
+
+Minimum test scenarios:
+
+1. Patient self-registers successfully
+2. Reception creates a patient successfully
+3. Duplicate mobile number is detected
+4. Similar name and date of birth produce a warning
+5. Authorized user searches patient
+6. Unauthorized user cannot access patient
+7. Clinic A cannot access Clinic B patient
+8. Patient views own profile
+9. Patient cannot edit clinical fields
+10. Reception updates contact details
+11. Doctor views permitted clinical history
+12. Lab user receives limited information
+13. Patient document uploads successfully
+14. Unauthorized document download is blocked
+15. Patient status change is audited
+16. Invalid date of birth is rejected
+17. Invalid mobile number is rejected
+18. Pagination works correctly
+19. Timeline returns events in correct order
+20. Inactive patient behavior follows business rules
+
+---
+
+## 24. Acceptance Criteria
+
+The module will be accepted when:
+
+* Patients can register through the patient portal.
+* Reception can create patient records.
+* Authorized users can search patients.
+* Duplicate patients are identified before creation.
+* Every patient receives a unique patient number.
+* Patient profiles display only role-permitted information.
+* Patient timelines show related healthcare events.
+* Patients can view their own records.
+* Patients cannot modify clinical information.
+* Clinic users cannot access another clinic’s patients.
+* All sensitive changes are audited.
+* Documents are stored securely.
+* APIs match the OpenAPI specification.
+* Frontend and backend integration passes QA.
+* Database migrations deploy successfully.
+* Performance meets agreed non-functional requirements.
+
+---
+
+## 25. Non-Functional Requirements
+
+### Performance
+
+* Patient search target: under 1 second for normal clinic volumes
+* Patient profile target: under 2 seconds
+* Timeline target: under 3 seconds
+* Paginated queries required for large datasets
+
+### Availability
+
+The patient module should meet the platform availability objective defined in the BRD.
+
+### Scalability
+
+The module should support increasing numbers of clinics and patient records without requiring a redesign of the core data model.
+
+### Usability
+
+Patient registration should be possible within approximately two minutes when complete information is available.
+
+### Accessibility
+
+Forms and navigation should follow accepted web-accessibility practices.
+
+---
+
+## 26. Dependencies
+
+The Patient Management module depends on:
+
+* Authentication and Tenant Onboarding
+* Role and Permission Management
+* Clinic configuration
+* PostgreSQL
+* Object storage
+* Audit logging
+* Notification service for selected events
+
+Other modules depending on Patient Management include:
+
+* Appointments
+* Consultations
+* Prescriptions
+* Laboratory
+* Billing
+* Payments
+* Reports
+* Analytics
+* Future AI services
+
+---
+
+## 27. Risks and Mitigations
+
+| Risk                         | Mitigation                                                   |
+| ---------------------------- | ------------------------------------------------------------ |
+| Duplicate patient records    | Duplicate detection and manual confirmation                  |
+| Incorrect patient selected   | Display patient number, DOB and mobile confirmation          |
+| Cross-clinic data exposure   | Tenant filtering, authorization tests and security logging   |
+| Incomplete registration data | Required fields and validation                               |
+| Sensitive data in logs       | Structured masking and logging standards                     |
+| Unauthorized profile changes | RBAC and audit logging                                       |
+| Unsafe document uploads      | File validation, private storage and future malware scanning |
+| Slow patient search          | Indexing, pagination and optimized queries                   |
+
+---
+
+## 28. Definition of Ready
+
+Development may begin when:
+
+* User stories are approved
+* Business rules are approved
+* Figma screens are available
+* API contract is reviewed
+* Database changes are reviewed
+* Role permissions are confirmed
+* Acceptance criteria are clear
+* Dependencies are identified
+
+---
+
+## 29. Definition of Done
+
+The module is complete when:
+
+* Frontend screens are implemented
+* Backend APIs are implemented
+* OpenAPI documentation is updated
+* Database migrations are included
+* Tenant isolation is tested
+* Role restrictions are tested
+* Audit logging is implemented
+* Unit and integration tests pass
+* QA test cases pass
+* Dev environment deployment succeeds
+* Product owner accepts the demo
+
+---
+
+## 30. Future Enhancements
+
+Future versions may include:
+
+* Family and dependent profiles
+* Guardian-controlled child accounts
+* Cross-clinic patient identity
+* Patient record merge
+* ABDM and ABHA integration
+* Insurance profile
+* Patient consent dashboard
+* Medical-data export
+* Mobile patient application
+* Multilingual registration
+* AI-generated patient summary
+* Semantic medical-history search
+* Document OCR and classification
+* Patient engagement scoring
+
+---
+
+# Document Summary
+
+The Patient Management module provides the central patient identity and record required by all major Clinora workflows.
+
+It enables secure registration, search, profile management, patient timelines, document management and patient self-service while enforcing tenant isolation, role-based access and detailed auditing.
+
+The next recommended document is:
+
+```text
+12_Doctor_Management_And_Scheduling_PRD_v1.0.docx
+```
+
+That document should define doctor profiles, clinic associations, consultation fees, working schedules, breaks, holidays, leave, appointment-slot generation and doctor availability.
