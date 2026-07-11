@@ -1,0 +1,715 @@
+Product: Clinora
+
+Version: 1.0
+
+Document Type: End-to-End User Journeys & Use Cases
+
+Audience: Product, Frontend, Backend, QA, DevOps, Architecture
+
+1. Purpose
+
+The purpose of this document is to define the complete business workflows performed by every user of the Clinora platform.
+
+Each workflow describes how different users interact with the system from start to finish, including business decisions, validations, exceptions, notifications, and expected outcomes.
+
+This document serves as the foundation for:
+
+UI/UX Design
+API Design
+Database Design
+Sprint Planning
+Test Case Preparation
+2. Primary Actors
+Role	Description
+Patient	Books appointments and views health records
+Reception	Manages daily clinic operations
+Doctor	Provides consultations
+Laboratory	Processes diagnostic requests
+Clinic Admin	Manages clinic operations
+Super Admin	Manages Clinora platform
+3. High-Level Patient Journey
+Patient Registration
+        ↓
+Login
+        ↓
+Search Doctor
+        ↓
+Book Appointment
+        ↓
+Payment
+        ↓
+Appointment Confirmation
+        ↓
+Clinic Visit
+        ↓
+Consultation
+        ↓
+Prescription
+        ↓
+Lab Test (Optional)
+        ↓
+Lab Report
+        ↓
+Follow-up
+4. Core Use Cases
+UC-001
+Patient Registration
+Actor
+
+Patient
+
+Goal
+
+Create a patient profile.
+
+Flow
+Open Website
+
+↓
+
+Register
+
+↓
+
+OTP Verification
+
+↓
+
+Create Account
+
+↓
+
+Dashboard
+Alternative Flow
+
+Reception creates patient.
+
+Exceptions
+Mobile already exists
+Email already exists
+Invalid OTP
+UC-002
+Patient Login
+Login
+
+↓
+
+Authentication
+
+↓
+
+Dashboard
+
+Exceptions
+
+Wrong password
+Account locked
+Inactive clinic
+UC-003
+Search Doctor
+
+Patient selects
+
+Specialty
+
+or
+
+Doctor
+
+System returns
+
+Available doctors
+Consultation fee
+Experience
+Ratings (future)
+UC-004
+Book Appointment
+Happy Path
+Patient
+
+↓
+
+Choose Doctor
+
+↓
+
+Choose Date
+
+↓
+
+View Available Slots
+
+↓
+
+Choose Slot
+
+↓
+
+Reason for Visit
+
+↓
+
+Payment Option
+
+↓
+
+Confirm
+
+↓
+
+Appointment Created
+
+↓
+
+Dashboard Updated
+
+↓
+
+Notification Sent
+Backend
+Validate doctor schedule
+Validate slot
+Prevent double booking
+Save appointment
+Generate invoice
+Publish notification event
+Frontend
+Calendar
+Slot Selection
+Confirmation Screen
+Exceptions
+
+Doctor unavailable
+
+↓
+
+Patient chooses another slot
+
+Slot booked
+
+↓
+
+Refresh availability
+
+Payment failed
+
+↓
+
+Appointment pending
+
+UC-005
+Reception Books Appointment
+Reception
+
+↓
+
+Search Patient
+
+↓
+
+Patient Exists?
+
+↓
+
+YES
+
+↓
+
+Book
+
+↓
+
+NO
+
+↓
+
+Create Patient
+
+↓
+
+Book
+
+Booking Source
+
+Walk-in
+
+Phone
+
+Reception
+
+Online
+UC-006
+Patient Cancels Appointment
+Patient
+
+↓
+
+Cancel
+
+↓
+
+Policy Check
+
+↓
+
+Refund?
+
+↓
+
+Release Slot
+
+↓
+
+Notify Doctor
+
+↓
+
+Notify Reception
+UC-007
+Doctor Delay
+Doctor
+
+↓
+
+Running Late
+
+↓
+
+Delay = 20 min
+
+↓
+
+System Updates ETA
+
+↓
+
+Affected Patients
+
+↓
+
+SMS
+
+↓
+
+Dashboard Updated
+
+↓
+
+Reception Updated
+UC-008
+Patient No Show
+Appointment Time
+
+↓
+
+Patient Missing
+
+↓
+
+Reception
+
+↓
+
+No Show
+
+↓
+
+Doctor Dashboard Updated
+
+↓
+
+Analytics Updated
+
+↓
+
+Follow-up Reminder
+UC-009
+Walk-in Patient
+Reception
+
+↓
+
+Walk-in
+
+↓
+
+Queue
+
+↓
+
+Doctor
+
+↓
+
+Consultation
+UC-010
+Doctor Consultation
+Doctor Dashboard
+
+↓
+
+Today's Appointments
+
+↓
+
+Open Patient
+
+↓
+
+Timeline
+
+↓
+
+Vitals
+
+↓
+
+Diagnosis
+
+↓
+
+Prescription
+
+↓
+
+Lab Recommendation
+
+↓
+
+Complete Consultation
+UC-011
+Laboratory Process
+Doctor
+
+↓
+
+Request Test
+
+↓
+
+Lab Dashboard
+
+↓
+
+Pending Test
+
+↓
+
+Collect Sample
+
+↓
+
+Testing
+
+↓
+
+Upload Report
+
+↓
+
+Doctor Notification
+
+↓
+
+Patient Notification
+UC-012
+Patient Downloads Report
+Patient
+
+↓
+
+Reports
+
+↓
+
+Select Report
+
+↓
+
+Download PDF
+UC-013
+Online Payment
+Appointment
+
+↓
+
+Invoice
+
+↓
+
+Razorpay
+
+↓
+
+Success
+
+↓
+
+Webhook
+
+↓
+
+Payment Updated
+
+↓
+
+Receipt
+
+↓
+
+Dashboard Updated
+Failure
+Payment Failed
+
+↓
+
+Retry
+
+OR
+
+Pay at Clinic
+UC-014
+Follow-up Appointment
+Doctor
+
+↓
+
+Follow-up Required
+
+↓
+
+Choose Date
+
+↓
+
+Reminder
+
+↓
+
+Patient Books
+UC-015
+Reception Check-in
+Patient Arrives
+
+↓
+
+Reception
+
+↓
+
+Check-in
+
+↓
+
+Doctor Queue
+
+↓
+
+Doctor Calls Patient
+UC-016
+Queue Management
+Checked In
+
+↓
+
+Queue Number
+
+↓
+
+Doctor Ready
+
+↓
+
+Next Patient
+
+↓
+
+Consultation
+UC-017
+Lab Report Review
+Doctor
+
+↓
+
+View Report
+
+↓
+
+Normal?
+
+↓
+
+YES
+
+↓
+
+Close
+
+↓
+
+NO
+
+↓
+
+Patient Notification
+
+↓
+
+Follow-up
+UC-018
+Refund
+Patient Cancels
+
+↓
+
+Refund Policy
+
+↓
+
+Eligible
+
+↓
+
+Razorpay Refund
+
+↓
+
+Patient Updated
+UC-019
+Doctor Leave
+Doctor Leave
+
+↓
+
+Appointments Found
+
+↓
+
+Move Doctor
+
+OR
+
+Reschedule
+
+↓
+
+Notify Patients
+UC-020
+Clinic Holiday
+Admin
+
+↓
+
+Holiday
+
+↓
+
+Appointments Found
+
+↓
+
+Bulk Reschedule
+
+↓
+
+Notify Patients
+5. Exception Scenarios
+
+The system must handle:
+
+Double booking
+Doctor unavailable
+Clinic holiday
+Payment failure
+SMS failure
+Email failure
+Lab upload failure
+Report correction
+Patient no show
+Doctor absence
+Internet interruption
+Session timeout
+6. Notifications
+
+The system should notify users for:
+
+Patient
+
+Appointment confirmation
+Reminder
+Cancellation
+Lab report ready
+Payment success
+Follow-up reminder
+
+Doctor
+
+New appointment
+Cancellation
+Lab report ready
+
+Reception
+
+Walk-in
+Queue updates
+Payment pending
+7. Dashboard Updates
+
+After every important event, all relevant dashboards should reflect the latest data immediately.
+
+Example:
+
+Patient books appointment
+
+↓
+
+Patient Dashboard
+
+↓
+
+Doctor Dashboard
+
+↓
+
+Reception Dashboard
+
+↓
+
+Calendar
+
+↓
+
+Analytics
+
+↓
+
+Notification Queue
+
+8. Business Rules
+
+Every workflow must:
+
+Validate authentication.
+Validate tenant.
+Validate permissions.
+Create audit logs.
+Generate notifications.
+Update dashboards.
+Maintain data consistency.
+9. Future Use Cases
+
+These workflows will be added in later releases:
+
+Insurance Claims
+Inventory Replenishment
+Pharmacy Dispensing
+AI Medical Assistant
+Voice Consultation Notes
+Telemedicine
+Marketing Campaigns
+CRM
+Multi-Branch Clinics
+Corporate Health Programs
+Document Summary
+
+This document describes how Clinora works from the user's perspective. It focuses on business workflows rather than technical implementation. Each approved use case will later be translated into Product Requirements Documents (PRDs), UI wireframes, APIs, database changes, Jira stories, and test cases.
