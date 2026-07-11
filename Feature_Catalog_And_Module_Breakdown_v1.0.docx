@@ -1,0 +1,366 @@
+roduct: Clinora
+
+Version: 1.0
+
+Document Type: Feature Catalog & Module Breakdown
+
+Audience: Product, Engineering, QA, DevOps, UI/UX
+
+1. Purpose
+
+The purpose of this document is to define every functional module and feature that will be part of the Clinora platform.
+
+This document serves as the master inventory of the product and provides a structured view of all modules planned for the MVP and future releases.
+
+Each feature listed here will later become:
+
+Figma Screens
+Product Requirements Documents (PRDs)
+Jira Epics
+Backend APIs
+Database Tables
+QA Test Cases
+2. Product Modules
+Module ID	Module	MVP	Future
+MOD-001	Authentication	✅	
+MOD-002	Patient Management	✅	
+MOD-003	Doctor Management	✅	
+MOD-004	Appointment Management	✅	
+MOD-005	Consultation & EMR	✅	
+MOD-006	Prescription Management	✅	
+MOD-007	Laboratory Management	✅	
+MOD-008	Billing & Payments	✅	
+MOD-009	Notifications	✅	
+MOD-010	Dashboards	✅	
+MOD-011	Reports & Analytics	✅	
+MOD-012	Clinic Administration	✅	
+MOD-013	CRM		✅
+MOD-014	Inventory		✅
+MOD-015	Insurance		✅
+MOD-016	Pharmacy		✅
+MOD-017	HR & Payroll		✅
+MOD-018	AI Assistant		✅
+MOD-019	Marketing Automation		✅
+MOD-020	Developer Platform (PaaS)		✅
+3. Module Details
+MOD-001 Authentication
+Features
+User Login
+User Logout
+Forgot Password
+Reset Password
+JWT Authentication
+Refresh Token
+Multi-Role Login
+Multi-Tenant Login
+MFA (Future)
+OTP Login (Future)
+MOD-002 Patient Management
+Features
+Register Patient
+Edit Patient
+Search Patient
+Patient Timeline
+Medical History
+Family Details
+Allergies
+Emergency Contact
+Documents
+Patient Notes
+MOD-003 Doctor Management
+Features
+Doctor Profile
+Department
+Specialization
+Availability
+Consultation Fee
+Calendar
+Working Hours
+Leave Management
+Holidays
+MOD-004 Appointment Management
+Features
+Online Booking
+Reception Booking
+Walk-in Booking
+Phone Booking
+Calendar View
+Slot Management
+Queue Management
+Appointment Status
+Cancel Appointment
+Reschedule
+Waitlist (Future)
+MOD-005 Consultation & EMR
+Features
+Consultation Notes
+Chief Complaint
+Diagnosis
+Vitals
+Medical History
+Clinical Timeline
+Follow-up
+Visit Summary
+MOD-006 Prescription
+Features
+Create Prescription
+Medicine Search
+Dosage
+Duration
+Frequency
+PDF Prescription
+Refill Request (Future)
+MOD-007 Laboratory
+Features
+Lab Orders
+Sample Collection
+Sample Tracking
+Test Status
+Upload Reports
+PDF Reports
+Doctor Review
+Patient Download
+MOD-008 Billing & Payments
+Features
+Invoice
+Online Payment
+Cash Payment
+Card Payment
+UPI Payment
+Refund
+Payment History
+GST Invoice
+Receipt Generation
+MOD-009 Notifications
+Features
+Email
+SMS
+WhatsApp
+Appointment Reminder
+Payment Reminder
+Follow-up Reminder
+Lab Report Notification
+MOD-010 Dashboards
+Patient Dashboard
+
+Features
+
+Upcoming Appointment
+Appointment History
+Payments
+Reports
+Prescriptions
+Notifications
+Doctor Dashboard
+
+Features
+
+Today's Appointments
+Patient Timeline
+Pending Reports
+Consultation Queue
+Schedule
+Reception Dashboard
+
+Features
+
+Calendar
+Queue
+Walk-ins
+Billing
+Patient Registration
+Lab Dashboard
+
+Features
+
+Pending Tests
+Sample Status
+Upload Reports
+Completed Tests
+Clinic Admin Dashboard
+
+Features
+
+Revenue
+Appointments
+Doctor Performance
+Patient Growth
+Staff
+Reports
+Clinora Super Admin Dashboard
+
+Features
+
+Clinics
+Subscription
+Platform Usage
+Health Monitoring
+User Statistics
+MOD-011 Reports & Analytics
+Features
+Revenue Report
+Appointment Report
+No-show Report
+Patient Growth
+Doctor Utilization
+Lab Performance
+Payment Analytics
+MOD-012 Clinic Administration
+Features
+Clinic Profile
+Working Hours
+Holidays
+Staff Management
+User Management
+Roles
+Branding
+Subscription
+Future Modules
+MOD-013 CRM
+
+Features
+
+Leads
+Patient Campaigns
+Email Marketing
+SMS Marketing
+WhatsApp Campaigns
+Feedback
+Reviews
+MOD-014 Inventory
+
+Features
+
+Medicines
+Consumables
+Purchase Orders
+Vendors
+Stock Alerts
+Expiry Tracking
+MOD-015 Insurance
+
+Features
+
+Insurance Verification
+Claim Creation
+Claim Tracking
+TPA Integration
+Settlement
+Reimbursement
+MOD-016 Pharmacy
+
+Features
+
+Dispensing
+Barcode
+Inventory Sync
+POS Billing
+MOD-017 HR
+
+Features
+
+Attendance
+Leave
+Payroll
+Employee Management
+MOD-018 AI Assistant
+
+Features
+
+Patient Summary
+Consultation Draft
+Lab Report Summary
+AI Search
+Clinical Insights
+Appointment Assistant
+Voice Notes
+MOD-019 Marketing
+
+Features
+
+Campaign Builder
+WhatsApp Marketing
+Email Campaigns
+SMS Campaigns
+Patient Engagement
+Loyalty Programs
+MOD-020 Healthcare Platform (PaaS)
+
+Features
+
+Public APIs
+API Gateway
+SDK
+Marketplace
+Third-party Apps
+Webhooks
+Developer Portal
+4. MVP Release Scope
+
+The first beta release includes:
+
+✅ Authentication
+
+✅ Patients
+
+✅ Doctors
+
+✅ Appointments
+
+✅ Consultation
+
+✅ Prescription
+
+✅ Lab
+
+✅ Payments
+
+✅ Notifications
+
+✅ Dashboards
+
+✅ Reports
+
+5. Future Release Scope
+
+Version 2.0
+
+Inventory
+CRM
+Pharmacy
+
+Version 3.0
+
+Insurance
+AI
+
+Version 4.0
+
+Healthcare Marketplace
+Developer APIs
+PaaS
+6. Dependencies
+Module	Depends On
+Appointment	Authentication, Patient, Doctor
+Consultation	Appointment
+Prescription	Consultation
+Lab	Consultation
+Payment	Appointment
+Reports	All modules
+Notifications	Appointment, Payment, Lab
+AI	EMR, Lab, Reports
+7. Module Ownership
+Module	Product	Frontend	Backend	DevOps	QA
+Authentication	✓	✓	✓	✓	✓
+Patients	✓	✓	✓		✓
+Doctors	✓	✓	✓		✓
+Appointment	✓	✓	✓	✓	✓
+Consultation	✓	✓	✓		✓
+Lab	✓	✓	✓	✓	✓
+Payment	✓	✓	✓	✓	✓
+Reports	✓	✓	✓		✓
+Document Summary
+
+This Feature Catalog is the master inventory of Clinora. Every feature in the product is identified, grouped into functional modules, and categorized as either MVP or Future Scope.
+
+This document serves as the foundation for sprint planning, backlog creation, architecture, API design, and implementation.
