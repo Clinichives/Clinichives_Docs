@@ -1,0 +1,320 @@
+Business Requirements Document (BRD)
+
+Document Name: Business Requirements Document (BRD)
+
+Product: Clinora
+
+Version: 1.0
+
+Prepared By: Product Management
+
+Status: Draft
+
+Audience: Product Team, Engineering, Architecture, QA, DevOps, Business Stakeholders
+
+1. Purpose
+
+The purpose of this Business Requirements Document (BRD) is to define the business objectives, functional requirements, user roles, operational workflows, and high-level business rules for the Clinora platform.
+
+This document serves as the primary business reference for all stakeholders before detailed product design and software development begin.
+
+2. Business Objective
+
+Clinora aims to provide clinics with a unified cloud-based Healthcare Operating System that digitizes and simplifies daily clinical and administrative operations.
+
+The platform will eliminate fragmented systems by integrating patient management, appointment scheduling, Electronic Medical Records (EMR), laboratory workflows, billing, payments, analytics, and future AI capabilities into one centralized platform.
+
+3. Business Goals
+
+The initial business goals are:
+
+Digitize clinic operations
+Reduce administrative workload
+Improve patient experience
+Improve doctor productivity
+Centralize patient medical records
+Simplify appointment scheduling
+Enable online booking and payments
+Improve laboratory workflow
+Provide operational analytics
+Build a scalable SaaS platform for multiple clinics
+
+Future business goals include:
+
+Marketing automation
+Inventory management
+Insurance integrations
+Pharmacy management
+AI-powered clinical assistance
+Platform APIs for third-party integrations
+4. Target Customers
+Phase 1
+Single Doctor Clinics
+Multi-Doctor Clinics
+Dental Clinics
+Physiotherapy Clinics
+Diagnostic Centers
+Specialty Clinics
+Small Hospitals
+
+Target Size:
+
+1–25 Doctors
+30–500 Patients per Day
+Phase 2
+Hospital Groups
+Laboratory Chains
+Healthcare Networks
+Phase 3
+
+Global Healthcare Providers
+
+5. Stakeholders
+
+Internal
+
+Product Manager
+Engineering Team
+Frontend Developer
+Backend Developer
+DevOps Engineer
+QA Team
+UI/UX Designer
+
+External
+
+Clinic Owner
+Doctors
+Reception Staff
+Laboratory Staff
+Patients
+6. Business Scope
+Included in MVP
+Authentication
+Multi-role login
+Role-based authorization
+Password reset
+Patient Management
+Patient registration
+Patient profile
+Patient history
+Appointment history
+Appointment Management
+Online booking
+Reception booking
+Walk-in appointments
+Doctor scheduling
+Calendar
+Queue management
+Appointment cancellation
+Rescheduling
+Doctor Workspace
+Dashboard
+Today's appointments
+Consultation notes
+Patient history
+Prescriptions
+Follow-up recommendations
+Laboratory
+Test requests
+Lab booking
+Upload reports
+Report download
+Billing & Payments
+Invoice generation
+Payment tracking
+Online payments
+Cash payments
+UPI payments
+Notifications
+Appointment confirmation
+Appointment reminders
+Payment confirmation
+Lab report availability
+Dashboards
+
+Patient Dashboard
+
+Doctor Dashboard
+
+Reception Dashboard
+
+Lab Dashboard
+
+Clinic Admin Dashboard
+
+Clinora Super Admin Dashboard
+
+7. Out of Scope (MVP)
+
+The following capabilities are intentionally excluded from the first release.
+
+Telemedicine
+AI Voice Assistant
+Insurance Claims Processing
+Pharmacy Management
+Inventory Management
+Marketing Automation
+HR & Payroll
+Government Health Record Integration
+
+These will be considered in future releases.
+
+8. Business Requirements
+Clinic Requirements
+
+The clinic must be able to:
+
+Register staff
+Configure doctors
+Configure consultation fees
+Configure working hours
+Configure holidays
+Manage appointments
+View revenue
+Generate reports
+Doctor Requirements
+
+Doctors must be able to:
+
+View appointments
+Access patient history
+Record consultations
+Generate prescriptions
+Recommend lab tests
+Review laboratory reports
+Reception Requirements
+
+Reception staff must be able to:
+
+Register patients
+Search patients
+Book appointments
+Manage walk-ins
+Collect payments
+Print invoices
+Manage queue
+Laboratory Requirements
+
+Lab staff must be able to:
+
+View pending tests
+Upload reports
+Update test status
+Notify doctors
+Patient Requirements
+
+Patients must be able to:
+
+Register
+Login
+Book appointments
+View appointments
+Pay online
+Download prescriptions
+Download reports
+Update profile
+9. Business Rules
+Every clinic is an independent tenant.
+Clinic users cannot access another clinic's data.
+Every appointment belongs to one clinic.
+Every patient belongs to one clinic in the MVP.
+A doctor cannot have overlapping appointments.
+Appointment slots must be validated before confirmation.
+Payment status must be verified before marking an invoice as paid.
+Every consultation must be linked to an appointment.
+Every lab report must be linked to a consultation or lab order.
+All sensitive operations must be audited.
+10. User Roles
+Role	Description
+Super Admin	Manages the Clinora platform
+Clinic Admin	Manages one clinic
+Reception	Handles appointments and billing
+Doctor	Provides consultations
+Laboratory	Manages diagnostic workflows
+Patient	Books appointments and views records
+
+A detailed permission matrix will be prepared in a separate document.
+
+11. Multi-Tenant Requirements
+
+The platform shall:
+
+Support multiple clinics
+Isolate clinic data
+Allow independent branding
+Support independent users
+Support independent reporting
+Support independent billing
+Share common infrastructure securely
+12. Non-Functional Requirements
+Performance
+Average API response time < 500 ms
+Appointment booking < 2 seconds
+Dashboard loading < 3 seconds
+Availability
+Target uptime: 99.9%
+Security
+JWT authentication
+Role-based authorization
+HTTPS only
+Encrypted passwords
+Audit logging
+Secure file storage
+Scalability
+
+The platform shall support growth from:
+
+1 clinic to 10,000+ clinics
+100 patients/day to millions of records
+
+without major architectural redesign.
+
+13. Success Criteria
+
+The MVP will be considered successful when:
+
+Clinics can complete daily operations using Clinora.
+Patients can independently book appointments.
+Doctors can complete consultations digitally.
+Lab reports are shared electronically.
+Payments are tracked digitally.
+Administrators can monitor clinic operations through dashboards.
+14. Risks
+
+Potential risks include:
+
+User adoption challenges
+Regulatory changes
+Third-party integration failures
+Internet connectivity issues
+Data migration from legacy systems
+Payment gateway downtime
+
+Mitigation strategies will be defined during implementation planning.
+
+15. Assumptions
+Clinics have internet connectivity.
+Users possess smartphones or computers.
+Clinics are willing to transition from manual processes.
+Cloud infrastructure is available.
+Payment gateway providers are operational.
+SMS and email providers are available.
+16. Dependencies
+
+The MVP depends on:
+
+AWS Cloud Infrastructure
+PostgreSQL
+Spring Boot Backend
+React Frontend
+Razorpay (Payments)
+AWS SES (Email)
+SMS/WhatsApp Provider
+Amazon SQS
+GitHub Actions
+Docker
+Kubernetes/ECS (deployment)
+Document Summary
+
+This document defines what Clinora must achieve from a business perspective. It does not describe detailed screen designs, APIs, database schemas, or implementation details. Those belong in later documents such as the Product Requirements Documents (PRDs), Architecture Documents, API Specifications, and Sprint Plans.
