@@ -1,0 +1,458 @@
+Product: Clinora
+
+Version: 1.0
+
+Document Type: High-Level System Architecture (HLD)
+
+Audience: Architects, Backend Developers, Frontend Developers, DevOps Engineers, QA, Product Team
+
+1. Purpose
+
+The purpose of this document is to define the high-level technical architecture of the Clinora platform.
+
+It provides a technology-agnostic view of how users, applications, services, databases, and integrations interact to deliver the core healthcare workflows.
+
+This document acts as the architectural blueprint that guides application development while remaining independent of specific cloud infrastructure decisions.
+
+2. Architecture Goals
+
+The architecture is designed to achieve the following objectives:
+
+Modular and maintainable design
+Multi-tenant SaaS architecture
+Secure patient data isolation
+Scalable cloud-native deployment
+High availability
+Responsive user experience
+Reliable background processing
+Easy integration with third-party healthcare services
+Support future AI capabilities
+3. Architectural Principles
+
+Clinora follows these architectural principles:
+
+Modular Design
+
+Business capabilities are divided into independent modules.
+
+API-First
+
+All communication between frontend and backend occurs through REST APIs.
+
+Stateless Services
+
+Application servers do not store session state.
+
+Multi-Tenant by Design
+
+Every request belongs to a tenant (clinic).
+
+Event-Driven Processing
+
+Long-running operations execute asynchronously.
+
+Security First
+
+Authentication, authorization, audit logging, and encryption are enforced throughout the platform.
+
+4. High-Level Architecture
+                   Users
+────────────────────────────────────
+
+Patient
+
+Doctor
+
+Reception
+
+Laboratory
+
+Clinic Admin
+
+Super Admin
+
+────────────────────────────────────
+                │
+                ▼
+
+        React Web Application
+
+                │
+
+        REST API (HTTPS)
+
+                │
+
+────────────────────────────────────
+
+        Spring Boot Backend
+
+────────────────────────────────────
+
+Authentication
+
+Patient Service
+
+Doctor Service
+
+Appointment Service
+
+Consultation Service
+
+Prescription Service
+
+Laboratory Service
+
+Payment Service
+
+Notification Service
+
+Reporting Service
+
+────────────────────────────────────
+
+                │
+
+────────────────────────────────────
+
+PostgreSQL
+
+Redis
+
+SQS
+
+File Storage
+
+────────────────────────────────────
+
+                │
+
+────────────────────────────────────
+
+Email
+
+SMS
+
+WhatsApp
+
+Payment Gateway
+
+Future AI
+
+────────────────────────────────────
+5. Core Components
+Frontend
+
+The frontend provides role-based user interfaces.
+
+Supported portals:
+
+Patient Portal
+Doctor Portal
+Reception Portal
+Laboratory Portal
+Clinic Admin Portal
+Super Admin Portal
+
+Responsibilities:
+
+User Interface
+Form Validation
+Dashboard Rendering
+API Communication
+Authentication Token Management
+Backend
+
+The backend contains all business logic.
+
+Responsibilities:
+
+Authentication
+Authorization
+Business Rules
+Data Validation
+API Services
+Event Publishing
+Audit Logging
+Database
+
+The database acts as the primary source of truth.
+
+Stores:
+
+Patients
+Doctors
+Appointments
+Consultations
+Prescriptions
+Lab Reports
+Payments
+Notifications
+Audit Logs
+Cache
+
+Redis will be used for:
+
+Frequently accessed reference data
+Session-related caching (if needed)
+Rate limiting
+OTP storage
+Short-lived application state
+Background Processing
+
+Background workers process tasks that should not delay user requests.
+
+Examples:
+
+Email notifications
+SMS
+WhatsApp
+Report generation
+Future AI processing
+6. Functional Modules
+
+The backend is organized into independent modules.
+
+Authentication
+
+↓
+
+Patient
+
+↓
+
+Doctor
+
+↓
+
+Appointment
+
+↓
+
+Consultation
+
+↓
+
+Prescription
+
+↓
+
+Laboratory
+
+↓
+
+Payment
+
+↓
+
+Notification
+
+↓
+
+Reports
+
+Each module owns its business logic and APIs.
+
+7. Request Lifecycle
+
+Example: Appointment Booking
+
+Patient
+
+↓
+
+Frontend
+
+↓
+
+Appointment API
+
+↓
+
+Validation
+
+↓
+
+Database Transaction
+
+↓
+
+Appointment Saved
+
+↓
+
+Frontend Response
+
+↓
+
+Background Event Published
+
+↓
+
+Notification Worker
+
+↓
+
+Email/SMS Sent
+
+The user receives confirmation immediately while notifications are processed asynchronously.
+
+8. Multi-Tenant Architecture
+
+Clinora is designed as a multi-tenant SaaS platform.
+
+Each clinic has:
+
+Independent users
+Independent doctors
+Independent patients
+Independent appointments
+Independent reports
+Independent billing
+
+Every request carries tenant information.
+
+All data access is automatically filtered using the tenant identifier.
+
+No tenant can access another tenant's information.
+
+9. Authentication Flow
+Login
+
+↓
+
+Authentication
+
+↓
+
+JWT Token
+
+↓
+
+Frontend Stores Token
+
+↓
+
+API Calls
+
+↓
+
+Authorization
+
+↓
+
+Business Logic
+
+Future enhancements:
+
+Multi-Factor Authentication
+Single Sign-On
+Google Login
+Microsoft Login
+10. Event-Driven Processing
+
+Certain operations are executed asynchronously.
+
+Examples include:
+
+Appointment confirmation notifications
+Appointment reminders
+Payment confirmations
+Laboratory report notifications
+PDF generation
+AI processing (future)
+
+This approach improves application responsiveness while ensuring reliable background execution.
+
+11. External Integrations
+
+Current integrations planned:
+
+Payment Gateway
+Email Service
+SMS Service
+WhatsApp Service
+
+Future integrations:
+
+Insurance Providers
+Pharmacy Systems
+Laboratory Chains
+Government Healthcare Platforms
+AI Platforms
+12. Security Architecture
+
+The platform enforces security at multiple layers.
+
+Authentication
+
+JWT
+Refresh Tokens
+
+Authorization
+
+Role-Based Access Control (RBAC)
+
+Data Security
+
+Password Hashing
+HTTPS
+Encryption in transit
+Encryption at rest
+
+Operational Security
+
+Audit Logging
+Tenant Isolation
+Secure File Storage
+13. Scalability Strategy
+
+Clinora is designed to grow incrementally.
+
+Initial Stage
+Single application instance
+Single database
+Growth Stage
+Multiple backend instances
+Background workers
+Distributed caching
+Enterprise Stage
+Kubernetes
+Horizontal scaling
+Read replicas
+AI services
+API Gateway
+Multi-region deployment
+
+This staged approach avoids unnecessary complexity in the MVP while allowing future expansion.
+
+14. Design Principles
+
+The architecture should remain:
+
+Simple
+Maintainable
+Secure
+Observable
+Scalable
+Extensible
+
+New business modules should be added with minimal impact on existing functionality.
+
+15. Non-Functional Considerations
+
+The architecture should support:
+
+High availability
+Fault tolerance
+Monitoring
+Logging
+Performance optimization
+Disaster recovery
+Secure backups
+Compliance requirements
+Document Summary
+
+This document defines the logical architecture of the Clinora platform. It explains how users interact with the application, how business modules are organized, and how data flows through the system.
+
+It intentionally avoids cloud-provider implementation details. Infrastructure design, networking, deployment, Kubernetes, AWS services, CI/CD, monitoring, and disaster recovery are covered in the next document.
